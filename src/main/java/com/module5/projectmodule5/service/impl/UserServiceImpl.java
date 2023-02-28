@@ -1,10 +1,11 @@
-package com.module5.projectmodule5.service;
+package com.module5.projectmodule5.service.impl;
 
 import com.module5.projectmodule5.dto.UserCreationDto;
 import com.module5.projectmodule5.dto.UserModificationDto;
 import com.module5.projectmodule5.dto.UserShowedDto;
 import com.module5.projectmodule5.entity.User;
 import com.module5.projectmodule5.repository.UserRepository;
+import com.module5.projectmodule5.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

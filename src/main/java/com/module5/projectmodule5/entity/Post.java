@@ -5,6 +5,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity
 public class Post {
@@ -13,32 +15,47 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "authorId", nullable = false)
+    @JoinColumn(name = "author_Id", nullable = false)
     private User authorId;
+    @ManyToOne
+    @JoinColumn(name = "postParent_Id", nullable = false)
+    private Post postParentId;
+//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    @JoinTable(
+//            name = "post_postComment",
+//            joinColumns = @JoinColumn(name = "post_Id", referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "postComment_Id", referencedColumnName = "id")
+//    )
+//    private Collection<PostComment> postComments = new ArrayList<>();
 
+//    @ManyToMany
+//    @JoinColumn(name = "postComment_Id")
+//    private  Collection<PostComment> postComments=new ArrayList<>();
     private String title;
     private String metaTitle;
-    private boolean published;
+    private Enum<PublishedStatus> published;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date createdAt;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date updatedAt;
+    @Lob
     private String content;
 
     public Post() {
     }
 
     public Post(Long id, User authorId,
-                String title, String metaTitle,
-                boolean published, Date createdAt,
-                Date updatedAt, String content) {
+                Post postParentId, String title,
+                String metaTitle, Enum<PublishedStatus> published,
+                Date createdAt, Date updatedAt, String content) {
         this.id = id;
         this.authorId = authorId;
+        this.postParentId = postParentId;
         this.title = title;
         this.metaTitle = metaTitle;
         this.published = published;
-        this.createdAt = Date.valueOf(LocalDate.now());
-        this.updatedAt = Date.valueOf(LocalDate.now());
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.content = content;
     }
 
@@ -74,12 +91,29 @@ public class Post {
         this.metaTitle = metaTitle;
     }
 
-    public boolean isPublished() {
+    public Post getPostParentId() {
+        return postParentId;
+    }
+
+    public void setPostParentId(Post postParentId) {
+        this.postParentId = postParentId;
+    }
+
+
+    public Enum<PublishedStatus> getPublished() {
         return published;
     }
 
-    public void setPublished(boolean published) {
+    public void setPublished(Enum<PublishedStatus> published) {
         this.published = published;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public Date getCreatedAt() {
@@ -99,4 +133,5 @@ public class Post {
     public void setContent(String content) {
         this.content = content;
     }
+
 }

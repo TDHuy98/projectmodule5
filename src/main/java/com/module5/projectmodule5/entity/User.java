@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.Collection;
+
 
 @Entity
 public class User {
@@ -30,6 +32,13 @@ public class User {
     private String address;
 
     private String avatarUrl;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private Collection<Role> roles;
 
     public User() {
     }
@@ -37,7 +46,8 @@ public class User {
     public User(Long id, String userName,
                 String email, String password,
                 String firstName, String lastName,
-                String mobile, String address, String avatarUrl) {
+                String mobile, String address, String avatarUrl
+            , Collection<Role> roles) {
         this.id = id;
         this.userName = userName;
         this.email = email;
@@ -47,6 +57,7 @@ public class User {
         this.mobile = mobile;
         this.address = address;
         this.avatarUrl = avatarUrl;
+        this.roles=roles;
     }
 
     public Long getId() {
@@ -119,6 +130,14 @@ public class User {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 }
 
